@@ -14,15 +14,17 @@ public class Observable<Element> : ObservableType {
     public typealias E = Element
     
     init() {
-#if TRACE_RESOURCES
+#if TRACE_RESOURCES   //全局资源计数
         let _ = Resources.incrementTotal()
 #endif
     }
-    
+
+    //Observale能被订阅的行为
     public func subscribe<O: ObserverType>(_ observer: O) -> Disposable where O.E == E {
-        rxAbstractMethod()
+        rxAbstractMethod() //自实现抽象方法，必须由子类重载
     }
-    
+
+    //Observale的实体
     public func asObservable() -> Observable<E> {
         return self
     }

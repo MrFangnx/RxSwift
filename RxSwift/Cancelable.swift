@@ -7,7 +7,7 @@
 //
 
 /// Represents disposable resource with state tracking.
-public protocol Cancelable : Disposable {
+public protocol Cancelable : Disposable {  //继承Disposable，追加声明了新方法isDisposed
     /// Was resource disposed.
-    var isDisposed: Bool { get }
+    var isDisposed: Bool { get }   //标识该序列是否已被释放
 }

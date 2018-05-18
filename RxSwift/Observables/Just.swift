@@ -72,7 +72,7 @@ final fileprivate class JustScheduled<Element> : Producer<Element> {
     }
 }
 
-final fileprivate class Just<Element> : Producer<Element> {
+final fileprivate class Just<Element> : Producer<Element> { //继承一个抽象类Producer(继承自Observable)
     private let _element: Element
     
     init(element: Element) {

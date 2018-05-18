@@ -18,7 +18,7 @@ public protocol ObserverType {
 }
 
 /// Convenience API extensions to provide alternate next, error, completed events
-extension ObserverType {
+extension ObserverType {  //扩展协议，为三种事件类型提供api
     
     /// Convenience method equivalent to `on(.next(element: E))`
     ///

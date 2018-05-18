@@ -10,7 +10,7 @@
     import Foundation
 #endif
 
-extension ObservableType {
+extension ObservableType {   //ObservableType的扩展，实现subscribe方法
     /**
      Subscribes an event handler to an observable sequence.
      
@@ -19,10 +19,10 @@ extension ObservableType {
      */
     public func subscribe(_ on: @escaping (Event<E>) -> Void)
         -> Disposable {
-            let observer = AnonymousObserver { e in
+            let observer = AnonymousObserver { e in  //构造匿名观察者，传入闭包，每次匿名观察者有新事件时调用
                 on(e)
             }
-            return self.asObservable().subscribe(observer)
+            return self.asObservable().subscribe(observer) //根据Observable类型完成各自的订阅过程
     }
     
     

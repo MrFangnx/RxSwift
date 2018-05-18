@@ -7,9 +7,9 @@
 //
 
 /// Type that can be converted to observable sequence (`Observable<E>`).
-public protocol ObservableConvertibleType {
+public protocol ObservableConvertibleType {  //声明asObservale方法
     /// Type of elements in sequence.
-    associatedtype E
+    associatedtype E    //关联类型
 
     /// Converts `self` to `Observable` sequence.
     ///

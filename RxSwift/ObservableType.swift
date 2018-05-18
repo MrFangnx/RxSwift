@@ -7,7 +7,7 @@
 //
 
 /// Represents a push style sequence.
-public protocol ObservableType : ObservableConvertibleType {
+public protocol ObservableType : ObservableConvertibleType { //ObservableType协议，继承ObservableConvertibleType协议（该协议申明了asObservable方法），并声明subscribe方法
     /**
     Subscribes `observer` to receive events for this sequence.
     
@@ -34,7 +34,7 @@ public protocol ObservableType : ObservableConvertibleType {
     func subscribe<O: ObserverType>(_ observer: O) -> Disposable where O.E == E
 }
 
-extension ObservableType {
+extension ObservableType {  //ObservableType协议的扩展， 提供默认asObservable实现
     
     /// Default implementation of converting `ObservableType` to `Observable`.
     public func asObservable() -> Observable<E> {
@@ -45,3 +45,4 @@ extension ObservableType {
         }
     }
 }
+
