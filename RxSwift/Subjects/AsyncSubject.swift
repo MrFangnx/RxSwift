@@ -30,7 +30,7 @@ public final class AsyncSubject<Element>
 
     // state
     private var _observers = Observers()
-    private var _isStopped = false
+    private var _isStopped = false  //标志
     private var _stoppedEvent = nil as Event<Element>? {
         didSet {
             _isStopped = _stoppedEvent != nil

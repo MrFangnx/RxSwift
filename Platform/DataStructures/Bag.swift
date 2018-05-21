@@ -10,7 +10,7 @@ import Swift
 
 let arrayDictionaryMaxSize = 30
 
-struct BagKey {
+struct BagKey {  //一个结构体，作为唯一标识添加到disposeBag中
     /**
     Unique identifier for object added to `Bag`.
      
@@ -44,7 +44,7 @@ struct Bag<T> : CustomDebugStringConvertible {
     var _value0: T? = nil
 
     // then fill "array dictionary"
-    var _pairs = ContiguousArray<Entry>()
+    var _pairs = ContiguousArray<Entry>()  //用ContiguousArray来存储元素，这种数组在处理class和@objc修饰的类型时更为高效，若存储struct或enum，则与Array差不多
 
     // last is sparse dictionary
     var _dictionary: [BagKey : T]? = nil

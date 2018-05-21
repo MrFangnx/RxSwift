@@ -29,10 +29,10 @@ class Sink<O : ObserverType> : Disposable {
             _synchronizationTracker.register(synchronizationErrorMessage: .default)
             defer { _synchronizationTracker.unregister() }
         #endif
-        if _disposed {
+        if _disposed { //如果已释放，则返回
             return
         }
-        _observer.on(event)
+        _observer.on(event)  //继续发送事件
     }
     
     final func forwarder() -> SinkForward<O> {

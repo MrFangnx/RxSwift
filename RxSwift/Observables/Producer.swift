@@ -17,7 +17,7 @@ class Producer<Element> : Observable<Element> { //Producer重载了Obervable的s
         if !CurrentThreadScheduler.isScheduleRequired {
             // The returned disposable needs to release all references once it was disposed.
             let disposer = SinkDisposer()  //创建一个SinkDisposer
-            let sinkAndSubscription = run(observer, cancel: disposer)  //调用run方法
+            let sinkAndSubscription = run(observer, cancel: disposer)  //调用run方法，执行sink处理
             disposer.setSinkAndSubscription(sink: sinkAndSubscription.sink, subscription: sinkAndSubscription.subscription)
 
             return disposer
@@ -33,7 +33,7 @@ class Producer<Element> : Observable<Element> { //Producer重载了Obervable的s
         }
     }
 
-    //run方法，返回一个sink和subscription元组
+    //run方法，订阅时执行，返回一个sink和subscription元组，这里run执行sink相关操作，主要包括对事件的转发，以及转发前的大部分预处理
     func run<O : ObserverType>(_ observer: O, cancel: Cancelable) -> (sink: Disposable, subscription: Disposable) where O.E == Element {
         rxAbstractMethod()
     }

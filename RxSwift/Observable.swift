@@ -38,9 +38,10 @@ public class Observable<Element> : ObservableType {
     // this is kind of ugly I know :(
     // Swift compiler reports "Not supported yet" when trying to override protocol extensions, so ¯\_(ツ)_/¯
 
+    //优化map嵌套调用，先返回一个Map对象，当map方法重复嵌套时，就由Map对象中重载的composeMap方法来合成一个复合map操作
     /// Optimizations for map operator
     internal func composeMap<R>(_ transform: @escaping (Element) throws -> R) -> Observable<R> {
-        return _map(source: self, transform: transform)
+        return _map(source: self, transform: transform)  //调用ObservableType扩展中的私有方法_map
     }
 }
 

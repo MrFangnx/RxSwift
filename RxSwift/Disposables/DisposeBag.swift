@@ -29,7 +29,8 @@ In case explicit disposal is necessary, there is also `CompositeDisposable`.
 */
 public final class DisposeBag: DisposeBase {
     
-    private var _lock = SpinLock()
+    private var _lock = SpinLock()  //一个递归锁，继承自NSRecursiveLock，用于_disposables数组线程安全
+                                    //使用递归锁是因为会出现同一个线程多次insert一个Disposable，导致死锁
     
     // state
     private var _disposables = [Disposable]()
@@ -48,9 +49,9 @@ public final class DisposeBag: DisposeBase {
     }
     
     private func _insert(_ disposable: Disposable) -> Disposable? {
-        _lock.lock(); defer { _lock.unlock() }
-        if _isDisposed {
-            return disposable
+        _lock.lock(); defer { _lock.unlock() } //defer将释放锁的过程推入栈中，defer所在作用域结束时，按照入栈defer代码块的反序出栈执行代码块，释放锁
+        if _isDisposed {  //若已完成释放，则不再添加新的Disposable
+            return disposable  //这里提前退出，会执行栈内的defer，释放锁
         }
 
         _disposables.append(disposable)
@@ -59,7 +60,7 @@ public final class DisposeBag: DisposeBase {
     }
 
     /// This is internal on purpose, take a look at `CompositeDisposable` instead.
-    private func dispose() {
+    private func dispose() {       //取出所有Disposable，并执行释放操作
         let oldDisposables = _dispose()
 
         for disposable in oldDisposables {
@@ -78,7 +79,7 @@ public final class DisposeBag: DisposeBase {
         return disposables
     }
     
-    deinit {
+    deinit {  //deinit时，释放全部Disposable
         dispose()
     }
 }
