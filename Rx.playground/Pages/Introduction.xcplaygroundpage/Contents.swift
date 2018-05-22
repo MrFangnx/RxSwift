@@ -69,11 +69,17 @@ example("Observable with subscriber") {
   _ = Observable<String>.create { observerOfString in
             print("Observable created")
             observerOfString.on(.next("😉"))
+            observerOfString.on(.next("test"))
             observerOfString.on(.completed)
             return Disposables.create()
         }
+//    .subscribe(onNext: { element in  //订阅不同事件
+//        print(element)
+//    })
         .subscribe { event in
-            print(event)
+            if !event.isCompleted {
+                print("event: \(event), element: \(event.element)")
+            }
     }
 }
 /*:

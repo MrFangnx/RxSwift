@@ -14,7 +14,7 @@ import RxSwift
  ## never
  Creates a sequence that never terminates and never emits any events. [More info](http://reactivex.io/documentation/operators/empty-never-throw.html)
  */
-example("never") {
+example("never") {  //不会完成也不会发送任何事件
     let disposeBag = DisposeBag()
     let neverSequence = Observable<String>.never()
     
@@ -30,7 +30,7 @@ example("never") {
  ## empty
  Creates an empty `Observable` sequence that only emits a Completed event. [More info](http://reactivex.io/documentation/operators/empty-never-throw.html)
  */
-example("empty") {
+example("empty") {  //只会发送Completed
     let disposeBag = DisposeBag()
     
     Observable<Int>.empty()
@@ -45,7 +45,7 @@ example("empty") {
  ## just
  Creates an `Observable` sequence with a single element. [More info](http://reactivex.io/documentation/operators/just.html)
  */
-example("just") {
+example("just") {  //只会发送一个next元素
     let disposeBag = DisposeBag()
     
     Observable.just("🔴")
@@ -59,11 +59,11 @@ example("just") {
  ## of
  Creates an `Observable` sequence with a fixed number of elements.
  */
-example("of") {
+example("of") {  //发送固定元素个数
     let disposeBag = DisposeBag()
     
     Observable.of("🐶", "🐱", "🐭", "🐹")
-        .subscribe(onNext: { element in
+        .subscribe(onNext: { element in   //只订阅next事件
             print(element)
         })
         .disposed(by: disposeBag)
@@ -82,7 +82,7 @@ example("of") {
  ## from
  Creates an `Observable` sequence from a `Sequence`, such as an `Array`, `Dictionary`, or `Set`.
  */
-example("from") {
+example("from") {  //从Sequence构造可观察序列
     let disposeBag = DisposeBag()
     
     Observable.from(["🐶", "🐱", "🐭", "🐹"])
@@ -105,9 +105,24 @@ example("create") {
             return Disposables.create()
         }
     }
-        
+
     myJust("🔴")
         .subscribe { print($0) }
+        .disposed(by: disposeBag)
+
+
+    print("=====================================================")
+    let myOf = { (elements: String...) -> Observable<String> in  //实现of，可变参数
+        return Observable.create { observer in
+            for element in elements {
+                observer.on(.next(element))
+            }
+            observer.on(.completed)
+            return Disposables.create()
+        }
+    }
+    myOf("🐶", "🐱", "🐭", "🐹")
+        .subscribe { print($0)}
         .disposed(by: disposeBag)
 }
 /*:
@@ -181,13 +196,18 @@ example("deferred") {
     deferredSequence
         .subscribe(onNext: { print($0) })
         .disposed(by: disposeBag)
+
+    //每订阅一次，就会多创建一个新的可观察序列
+    deferredSequence
+        .subscribe(onNext: { print($0) })
+        .disposed(by: disposeBag)
 }
 /*:
  ----
  ## error
  Creates an `Observable` sequence that emits no items and immediately terminates with an error.
  */
-example("error") {
+example("error") {  //只发送错误
     let disposeBag = DisposeBag()
         
     Observable<Int>.error(TestError.test)
@@ -203,8 +223,8 @@ example("doOn") {
     let disposeBag = DisposeBag()
     
     Observable.of("🍎", "🍐", "🍊", "🍋")
-        .do(onNext: { print("Intercepted:", $0) }, onError: { print("Intercepted error:", $0) }, onCompleted: { print("Completed")  })
-        .subscribe(onNext: { print($0) })
+        .do(onNext: { print("Intercepted:", $0) }, onError: { print("Intercepted error:", $0) }, onCompleted: { print("Completed")  })  //发送事件的行为
+        .subscribe(onNext: { print($0) }, onCompleted: {print("subscribe Completed")})
         .disposed(by: disposeBag)
 }
 //: > There are also `doOnNext(_:)`, `doOnError(_:)`, and `doOnCompleted(_:)` convenience methods to intercept those specific events, and `doOn(onNext:onError:onCompleted:)` to intercept one or more events in a single call.
