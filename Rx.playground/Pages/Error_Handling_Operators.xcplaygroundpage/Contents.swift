@@ -21,7 +21,7 @@ example("catchErrorJustReturn") {
     let sequenceThatFails = PublishSubject<String>()
     
     sequenceThatFails
-        .catchErrorJustReturn("😊")
+        .catchErrorJustReturn("😊")  //捕捉到错误则直接发送该信号，并发送completed
         .subscribe { print($0) }
         .disposed(by: disposeBag)
     
@@ -44,7 +44,7 @@ example("catchError") {
     let recoverySequence = PublishSubject<String>()
     
     sequenceThatFails
-        .catchError {
+        .catchError {  //捕捉错误后，替换一个恢复序列
             print("Error:", $0)
             return recoverySequence
         }
@@ -58,6 +58,9 @@ example("catchError") {
     sequenceThatFails.onError(TestError.test)
     
     recoverySequence.onNext("😊")
+    recoverySequence.onNext("tt")
+    recoverySequence.onError(TestError.test)  //恢复序列也挂了，就真挂了
+    recoverySequence.onNext("tt")
 }
 /*:
  ----
@@ -74,7 +77,7 @@ example("retry") {
         observer.onNext("🍐")
         observer.onNext("🍊")
         
-        if count == 1 {
+        if count <= 2 {
             observer.onError(TestError.test)
             print("Error encountered")
             count += 1
@@ -89,7 +92,7 @@ example("retry") {
     }
     
     sequenceThatErrors
-        .retry()
+        .retry()  //从第一个信号开始无脑重试
         .subscribe(onNext: { print($0) })
         .disposed(by: disposeBag)
 }
@@ -123,7 +126,7 @@ example("retry maxAttemptCount") {
     }
     
     sequenceThatErrors
-        .retry(3)
+        .retry(3)  //设置无脑重试次数
         .subscribe(onNext: { print($0) })
         .disposed(by: disposeBag)
 }

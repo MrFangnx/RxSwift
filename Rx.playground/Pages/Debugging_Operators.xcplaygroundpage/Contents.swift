@@ -39,7 +39,7 @@ example("debug") {
     
     sequenceThatErrors
         .retry(3)
-        .debug()
+        .debug() //设置输出调试信息
         .subscribe(onNext: { print($0) })
         .disposed(by: disposeBag)
 }
@@ -50,30 +50,30 @@ example("debug") {
  */
 #if NOT_IN_PLAYGROUND
 #else
-example("RxSwift.Resources.total") {
-    print(RxSwift.Resources.total)
+example("RxSwift.Resources.total") {  //打印Rx所有分配的资源，用于检测内存泄漏
+    print("RxSwift.Resources.total: \(RxSwift.Resources.total)")
     
     let disposeBag = DisposeBag()
     
-    print(RxSwift.Resources.total)
+    print("RxSwift.Resources.total: \(RxSwift.Resources.total)")
     
     let variable = Variable("🍎")
     
-    let subscription1 = variable.asObservable().subscribe(onNext: { print($0) })
+    let subscription1 = variable.asObservable().subscribe(onNext: { print("subscription1: \($0)") })
     
-    print(RxSwift.Resources.total)
+    print("RxSwift.Resources.total: \(RxSwift.Resources.total)")
     
-    let subscription2 = variable.asObservable().subscribe(onNext: { print($0) })
+    let subscription2 = variable.asObservable().subscribe(onNext: { print("subscription2: \($0)") })
     
-    print(RxSwift.Resources.total)
+    print("RxSwift.Resources.total: \(RxSwift.Resources.total)")
     
     subscription1.dispose()
     
-    print(RxSwift.Resources.total)
+    print("RxSwift.Resources.total: \(RxSwift.Resources.total)")
     
     subscription2.dispose()
     
-    print(RxSwift.Resources.total)
+    print("RxSwift.Resources.total: \(RxSwift.Resources.total)")
 }
     
 print(RxSwift.Resources.total)

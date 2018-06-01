@@ -22,7 +22,7 @@ example("filter") {
         "🐱", "🐰", "🐶",
         "🐸", "🐱", "🐰",
         "🐹", "🐸", "🐱")
-        .filter {
+        .filter {      //过滤条件
             $0 == "🐱"
         }
         .subscribe(onNext: { print($0) })
@@ -38,7 +38,7 @@ example("distinctUntilChanged") {
     let disposeBag = DisposeBag()
     
     Observable.of("🐱", "🐷", "🐱", "🐱", "🐱", "🐵", "🐱")
-        .distinctUntilChanged()
+        .distinctUntilChanged()     //如果跟上一个（最近一次）信号重复，则过滤
         .subscribe(onNext: { print($0) })
         .disposed(by: disposeBag)
 }
@@ -61,11 +61,11 @@ example("elementAt") {
  ## `single`
  Emits only the first element (or the first element that meets a condition) emitted by an `Observable` sequence. Will throw an error if the `Observable` sequence does not emit exactly one element.
  */
-example("single") {
+example("single") {  //只允许一个满足条件的信号出现
     let disposeBag = DisposeBag()
     
     Observable.of("🐱", "🐰", "🐶", "🐸", "🐷", "🐵")
-        .single()
+        .single()     //发出满足条件的第一个，由于不设置条件，所以任何元素都满足，超过一个元素，产生错误
         .subscribe(onNext: { print($0) })
         .disposed(by: disposeBag)
 }
@@ -74,17 +74,17 @@ example("single with conditions") {
     let disposeBag = DisposeBag()
     
     Observable.of("🐱", "🐰", "🐶", "🐸", "🐷", "🐵")
-        .single { $0 == "🐸" }
+        .single { $0 == "🐸" }    //发出满足条件的第一个，仅有一个时，发送completed
         .subscribe { print($0) }
         .disposed(by: disposeBag)
     
     Observable.of("🐱", "🐰", "🐶", "🐱", "🐰", "🐶")
-        .single { $0 == "🐰" }
+        .single { $0 == "🐰" }   //发出满足条件的第一个，当有不只一个时，发送error
         .subscribe { print($0) }
         .disposed(by: disposeBag)
     
     Observable.of("🐱", "🐰", "🐶", "🐸", "🐷", "🐵")
-        .single { $0 == "🔵" }
+        .single { $0 == "🔵" }   //没有任何信号满足条件，发送error
         .subscribe { print($0) }
         .disposed(by: disposeBag)
 }
@@ -98,7 +98,7 @@ example("take") {
     let disposeBag = DisposeBag()
     
     Observable.of("🐱", "🐰", "🐶", "🐸", "🐷", "🐵")
-        .take(3)
+        .take(3)  //只发送前3个
         .subscribe(onNext: { print($0) })
         .disposed(by: disposeBag)
 }
@@ -112,7 +112,7 @@ example("takeLast") {
     let disposeBag = DisposeBag()
     
     Observable.of("🐱", "🐰", "🐶", "🐸", "🐷", "🐵")
-        .takeLast(3)
+        .takeLast(3)  //只发送后3个
         .subscribe(onNext: { print($0) })
         .disposed(by: disposeBag)
 }
@@ -125,8 +125,8 @@ example("takeLast") {
 example("takeWhile") {
     let disposeBag = DisposeBag()
     
-    Observable.of(1, 2, 3, 4, 5, 6)
-        .takeWhile { $0 < 4 }
+    Observable.of(1, 2, 3, 4, 5, 6, 1)
+        .takeWhile { $0 < 4 }  //从头开始发送，直到不满足条件，一旦不满足条件而停止了，则后面满足条件的也不会发送了
         .subscribe(onNext: { print($0) })
         .disposed(by: disposeBag)
 }
@@ -143,7 +143,7 @@ example("takeUntil") {
     let referenceSequence = PublishSubject<String>()
     
     sourceSequence
-        .takeUntil(referenceSequence)
+        .takeUntil(referenceSequence)  //直到referenceSequence发送信号前，都会发送sourceSequence信号，一旦referenceSequence发送了信号，sourceSequence将直接发送completed
         .subscribe { print($0) }
         .disposed(by: disposeBag)
     
@@ -167,7 +167,7 @@ example("skip") {
     let disposeBag = DisposeBag()
     
     Observable.of("🐱", "🐰", "🐶", "🐸", "🐷", "🐵")
-        .skip(2)
+        .skip(2)  //跳过前2个
         .subscribe(onNext: { print($0) })
         .disposed(by: disposeBag)
 }
@@ -180,8 +180,8 @@ example("skip") {
 example("skipWhile") {
     let disposeBag = DisposeBag()
     
-    Observable.of(1, 2, 3, 4, 5, 6)
-        .skipWhile { $0 < 4 }
+    Observable.of(1, 2, 3, 4, 5, 6, 1)
+        .skipWhile { $0 < 4 }  //跳过不满足条件的前几个，一旦出现满足条件的，即使后面再次出现不满足条件的，仍会发送
         .subscribe(onNext: { print($0) })
         .disposed(by: disposeBag)
 }
@@ -194,8 +194,8 @@ example("skipWhileWithIndex") {
     let disposeBag = DisposeBag()
     
     Observable.of("🐱", "🐰", "🐶", "🐸", "🐷", "🐵")
-        .skipWhileWithIndex { element, index in
-            index < 3
+        .skipWhileWithIndex { element, index in   //跳过不满足条件的前几个，设置元素值和索引的双重条件
+            index < 2 || element != "🐷"  //return Bool
         }
         .subscribe(onNext: { print($0) })
         .disposed(by: disposeBag)
@@ -213,7 +213,7 @@ example("skipUntil") {
     let referenceSequence = PublishSubject<String>()
     
     sourceSequence
-        .skipUntil(referenceSequence)
+        .skipUntil(referenceSequence)  //直到referenceSequence发送信号前，都会跳过sourceSequence信号，一旦referenceSequence发送了信号，sourceSequence将开始发送后续信号
         .subscribe(onNext: { print($0) })
         .disposed(by: disposeBag)
     

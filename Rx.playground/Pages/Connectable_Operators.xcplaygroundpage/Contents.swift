@@ -20,14 +20,14 @@ playgroundShouldContinueIndefinitely()
 func sampleWithoutConnectableOperators() {
     printExampleHeader(#function)
     
-    let interval = Observable<Int>.interval(1, scheduler: MainScheduler.instance)
+    let interval = Observable<Int>.interval(1, scheduler: MainScheduler.instance)  //创建一个每一秒发出消息的序列
     
     _ = interval
-        .subscribe(onNext: { print("Subscription: 1, Event: \($0)") })
+        .subscribe(onNext: { print("Subscription: 1, Event: \($0)") })  //interval直接开始发出消息
     
     delay(5) {
         _ = interval
-            .subscribe(onNext: { print("Subscription: 2, Event: \($0)") })
+            .subscribe(onNext: { print("Subscription: 2, Event: \($0)") })  //5秒后才开始接受到interval发出的消息
     }
 }
 
@@ -42,23 +42,23 @@ func sampleWithoutConnectableOperators() {
  */
 func sampleWithPublish() {
     printExampleHeader(#function)
-    
+
     let intSequence = Observable<Int>.interval(1, scheduler: MainScheduler.instance)
-        .publish()
-    
+        .publish()                                                                   //将普通序列转变为可连接序列
+
     _ = intSequence
-        .subscribe(onNext: { print("Subscription 1:, Event: \($0)") })
-    
-    delay(2) { _ = intSequence.connect() }
-    
+        .subscribe(onNext: { print("Subscription 1:, Event: \($0)") })  //不会马上发出消息
+
+    delay(2) { _ = intSequence.connect() }   //2秒后，开始发出消息
+
     delay(4) {
         _ = intSequence
-            .subscribe(onNext: { print("Subscription 2:, Event: \($0)") })
+            .subscribe(onNext: { print("Subscription 2:, Event: \($0)") })  //4s后，开始订阅到4s后开始发送的消息
     }
-    
+
     delay(6) {
         _ = intSequence
-            .subscribe(onNext: { print("Subscription 3:, Event: \($0)") })
+            .subscribe(onNext: { print("Subscription 3:, Event: \($0)") })  //6s后，开始订阅到6s后发送的消息
     }
 }
 
@@ -74,23 +74,23 @@ func sampleWithPublish() {
  */
 func sampleWithReplayBuffer() {
     printExampleHeader(#function)
-    
+
     let intSequence = Observable<Int>.interval(1, scheduler: MainScheduler.instance)
         .replay(5)
-    
+
     _ = intSequence
-        .subscribe(onNext: { print("Subscription 1:, Event: \($0)") })
-    
-    delay(2) { _ = intSequence.connect() }
-    
+        .subscribe(onNext: { print("Subscription 1:, Event: \($0)") })  //不马上发送消息
+
+    delay(2) { _ = intSequence.connect() }   //准备就绪开始发送消息
+
     delay(4) {
         _ = intSequence
-            .subscribe(onNext: { print("Subscription 2:, Event: \($0)") })
+            .subscribe(onNext: { print("Subscription 2:, Event: \($0)") })   //4s后，收到缓冲的历史消息，4s后正常接收消息
     }
-    
+
     delay(8) {
         _ = intSequence
-            .subscribe(onNext: { print("Subscription 3:, Event: \($0)") })
+            .subscribe(onNext: { print("Subscription 3:, Event: \($0)") })  //6s后，收到缓冲的历史消息，6s后正常接收消息
     }
 }
 
@@ -103,25 +103,25 @@ func sampleWithReplayBuffer() {
  */
 func sampleWithMulticast() {
     printExampleHeader(#function)
-    
+
     let subject = PublishSubject<Int>()
-    
+
     _ = subject
         .subscribe(onNext: { print("Subject: \($0)") })
-    
+
     let intSequence = Observable<Int>.interval(1, scheduler: MainScheduler.instance)
-        .multicast(subject)
-    
+        .multicast(subject)                                                              //connect()调用后，通过指定类型subject的行为来发送广播消息
+
     _ = intSequence
         .subscribe(onNext: { print("\tSubscription 1:, Event: \($0)") })
-    
+
     delay(2) { _ = intSequence.connect() }
-    
+
     delay(4) {
         _ = intSequence
             .subscribe(onNext: { print("\tSubscription 2:, Event: \($0)") })
     }
-    
+
     delay(6) {
         _ = intSequence
             .subscribe(onNext: { print("\tSubscription 3:, Event: \($0)") })

@@ -1200,7 +1200,7 @@
 					};
 					C83366DC1AD0293800C668A7 = {
 						CreatedOnToolsVersion = 6.2;
-						DevelopmentTeam = 783T66X79Y;
+						DevelopmentTeam = 4XNNQ67F9K;
 						LastSwiftMigration = 0800;
 					};
 					C849EF601C3190360048AC4A = {
@@ -1867,12 +1867,12 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CODE_SIGN_IDENTITY = "iPhone Developer";
-				DEVELOPMENT_TEAM = 783T66X79Y;
+				DEVELOPMENT_TEAM = 4XNNQ67F9K;
 				INFOPLIST_FILE = "RxExample/Info-iOS.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				OTHER_LDFLAGS = "-objc_loadall";
-				PRODUCT_BUNDLE_IDENTIFIER = io.rx.example.4.0.0;
+				PRODUCT_BUNDLE_IDENTIFIER = iorx.exmp.4.0.0;
 				PRODUCT_NAME = "RxExample-iOS";
 				SDKROOT = iphoneos;
 			};
@@ -1882,12 +1882,12 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CODE_SIGN_IDENTITY = "iPhone Developer";
-				DEVELOPMENT_TEAM = 783T66X79Y;
+				DEVELOPMENT_TEAM = 4XNNQ67F9K;
 				INFOPLIST_FILE = "RxExample/Info-iOS.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				OTHER_LDFLAGS = "-objc_loadall";
-				PRODUCT_BUNDLE_IDENTIFIER = io.rx.example.4.0.0;
+				PRODUCT_BUNDLE_IDENTIFIER = iorx.exmp.4.0.0;
 				PRODUCT_NAME = "RxExample-iOS";
 				SDKROOT = iphoneos;
 				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
@@ -2089,12 +2089,12 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CODE_SIGN_IDENTITY = "iPhone Developer";
-				DEVELOPMENT_TEAM = 783T66X79Y;
+				DEVELOPMENT_TEAM = 4XNNQ67F9K;
 				INFOPLIST_FILE = "RxExample/Info-iOS.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				OTHER_LDFLAGS = "-objc_loadall";
-				PRODUCT_BUNDLE_IDENTIFIER = io.rx.example.4.0.0;
+				PRODUCT_BUNDLE_IDENTIFIER = iorx.exmp.4.0.0;
 				PRODUCT_NAME = "RxExample-iOS";
 				SDKROOT = iphoneos;
 				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";

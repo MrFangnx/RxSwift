@@ -19,7 +19,7 @@ example("toArray") {
     let disposeBag = DisposeBag()
     
     Observable.range(start: 1, count: 10)
-        .toArray()
+        .toArray()  //将信号塞入数组，然后发送只包含这个数组的信号，之后直接发送completed
         .subscribe { print($0) }
         .disposed(by: disposeBag)
 }
@@ -33,8 +33,15 @@ example("reduce") {
     let disposeBag = DisposeBag()
     
     Observable.of(10, 100, 1000)
-        .reduce(1, accumulator: +)
+        .reduce(1, accumulator: +)  //设置初始的种子值，然后将闭包结果依次作用于这个每个信号，最终返回一个包含最终累积值的信号
         .subscribe(onNext: { print($0) })
+        .disposed(by: disposeBag)
+
+    Observable.of(10, 100, 1000)
+        .reduce(1, accumulator: { (element, seed) -> Int in //上述的+就带有该闭包的效果
+            return element * seed;
+        })
+        .subscribe(onNext: {print($0) })
         .disposed(by: disposeBag)
 }
 /*:
@@ -52,21 +59,26 @@ example("concat") {
     let variable = Variable(subject1)
     
     variable.asObservable()
-        .concat()
+        .concat()  //拼接
         .subscribe { print($0) }
         .disposed(by: disposeBag)
     
     subject1.onNext("🍐")
     subject1.onNext("🍊")
     
-    variable.value = subject2
+    variable.value = subject2   //这里接入第二个序列
     
-    subject2.onNext("I would be ignored")
+    subject2.onNext("I would be ignored")  //由于第一个序列没有发送completed，这个信号会被subject2的下一个信号挤掉
+
     subject2.onNext("🐱")
     
-    subject1.onCompleted()
+    subject1.onCompleted() //当第一个序列发送completed之后，才会开始发送subject2中存在的信号
     
     subject2.onNext("🐭")
+
+    subject2.onNext("🍎")
+
+    subject2.onCompleted()  //当第二个序列发送completed，没有其他序列在后面等待，则直接返回最终的completed
 }
 
 //: [Next](@next) - [Table of Contents](Table_of_Contents)

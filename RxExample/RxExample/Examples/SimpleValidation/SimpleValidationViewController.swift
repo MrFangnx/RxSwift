@@ -30,11 +30,14 @@ class SimpleValidationViewController : ViewController {
         passwordValidOutlet.text = "Password has to be at least \(minimalPasswordLength) characters"
 
         let usernameValid = usernameOutlet.rx.text.orEmpty
-            .map { $0.count >= minimalUsernameLength }
-            .share(replay: 1) // without this map would be executed once for each binding, rx is stateless by default
+            .map {  ele -> Bool in print("HHH ----- username map")
+                    return ele.count >= minimalUsernameLength }
+            .share(replay: 1)
+        //由于下面everythingValid中合并了usernameValid信号，同时usernameValid绑定了两个控件，usernameOutlet.rx.text.orEmpty发送消息，map均会执行一次，为了防止map执行多次，这里需要对信号进行share共享处理，replay表示缓存若干个发送过的消息
 
         let passwordValid = passwordOutlet.rx.text.orEmpty
-            .map { $0.count >= minimalPasswordLength }
+            .map { ele -> Bool in print("HHH password ----- map")
+                return ele.count >= minimalPasswordLength }
             .share(replay: 1)
 
         let everythingValid = Observable.combineLatest(usernameValid, passwordValid) { $0 && $1 }
